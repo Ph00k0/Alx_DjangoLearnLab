@@ -37,3 +37,8 @@
   - Example: `/api/books/?ordering=title`
   - Example: `/api/books/?ordering=-publication_year`
 
+
+
+How to run the tests.
+The structure of the tests.
+Examples of test cases.

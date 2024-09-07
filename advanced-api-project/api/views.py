@@ -26,6 +26,16 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # Restrict to authenticated users
 
+# View to update an existing book
+class BookUpdateView(generics.UpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+# View to delete a book
+class BookDeleteView(generics.DestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    
     from rest_framework.permissions import AllowAny
 
 # Provides list and create operations for books

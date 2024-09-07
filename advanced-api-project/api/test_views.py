@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Book, Author
 from .serializers import BookSerializer
+from django.contrib.auth.models import User
+from .models import Book
 
 class BookTests(APITestCase):
     def setUp(self):
@@ -14,6 +16,13 @@ class BookTests(APITestCase):
             publication_year=1997,
             author=self.author
         )
+          # Create a user and login
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpassword')
+        
+        # Create test data
+        self.book = Book.objects.create(title='Test Book', publication_year=2023, author='Test Author')
+
         self.list_url = reverse('book-list')
         self.detail_url = reverse('book-detail', args=[self.book.id])
         self.data = {

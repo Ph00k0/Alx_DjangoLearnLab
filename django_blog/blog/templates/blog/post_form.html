@@ -5,8 +5,14 @@
 <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Post</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+     {{ form.title.label_tag }} {{ form.title }}<br>
+    {{ form.content.label_tag }} {{ form.content }}<br>
+    {{ form.tags.label_tag }} {{ form.tags }}  <!-- Ensure the tags field is rendered here -->
+    
+    <button type="submit">Save</button> {{ form.as_p }}
     <button type="submit">Save</button>
 </form>
 <a href="{% url 'post-list' %}">Cancel</a>
 {% endblock %}
+
+

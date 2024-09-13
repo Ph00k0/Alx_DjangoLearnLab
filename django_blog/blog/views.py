@@ -6,13 +6,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 # blog/views.py
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView,DeleteView
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 
 
 
@@ -75,6 +79,10 @@ class PostUpdateView(UpdateView):
     fields = ['title', 'content']
     template_name = 'blog/post_form.html'
 
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.object.pk})
 
@@ -91,6 +99,10 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
     success_url = reverse_lazy('post-list')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
 
     def get_queryset(self):
         queryset = super().get_queryset()

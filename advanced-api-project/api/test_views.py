@@ -23,6 +23,7 @@ class BookTests(APITestCase):
         # Create test data
         self.book = Book.objects.create(title='Test Book', publication_year=2023, author='Test Author')
 
+
         self.list_url = reverse('book-list')
         self.detail_url = reverse('book-detail', args=[self.book.id])
         self.data = {

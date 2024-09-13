@@ -171,3 +171,4 @@ def search(request):
     return render(request, 'blog/search_results.html', {'results': results, 'query': query})
 
 # Create your views here.
+s

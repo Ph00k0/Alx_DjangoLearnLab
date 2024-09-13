@@ -25,4 +25,16 @@ class Post(models.Model):
     # existing fields
     tags = TaggableManager()
 
+class Post(models.Model):
+    # Existing fields
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    # Add tagging
+    tags = TaggableManager()  # This enables tagging
+
+    def __str__(self):
+        return self.title
 # Create your models here.

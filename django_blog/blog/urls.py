@@ -4,6 +4,8 @@ from . import views
 # blog/urls.py
 from django.urls import path
 from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,CommentCreateView, CommentUpdateView, CommentDeleteView
+from .views import search
+
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -29,4 +31,13 @@ urlpatterns = [
     
     # URL for deleting a specific comment
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
+]
+
+
+urlpatterns = [
+    # Search URL
+    path('search/', search, name='search'),
+    
+    # URL for filtering posts by tag
+    path('tags/<slug:tag_slug>/', PostListView.as_view(), name='posts-by-tag'),
 ]

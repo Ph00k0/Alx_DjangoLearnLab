@@ -18,6 +18,7 @@ from .models import Post, Comment
 from .forms import CommentForm
 from .forms import PostForm
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 
 
 
@@ -156,5 +157,17 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+    
+
+def search(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) | 
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'results': results, 'query': query})
 
 # Create your views here.

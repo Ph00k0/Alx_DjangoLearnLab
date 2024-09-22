@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',         # Added Accounts App
     'posts',  # Add the posts app here
     'django_filters',
+     'notifications',
 ]
 
 MIDDLEWARE = [

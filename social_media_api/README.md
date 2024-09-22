@@ -46,3 +46,6 @@ Delete Comment
 URL: DELETE /api/comments/{id}/
 Description: Deletes a comment.
 Authentication: Required (Author only).
+
+Instructions for the follow and unfollow functionality.
+Information on how to access the feed, including endpoint details and usage examples.

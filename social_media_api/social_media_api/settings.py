@@ -149,3 +149,4 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+PORT = 8000  # or any other port number you want to use

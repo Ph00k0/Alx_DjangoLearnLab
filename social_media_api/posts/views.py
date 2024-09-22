@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 from .models import Post
 from rest_framework.decorators import api_view, permission_classes
 from accounts.models import CustomUser  # Ensure you import your CustomUser model
+from notifications.models import Notification  # Adjust if necessary
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -56,5 +57,34 @@ def feed_view(request):
     serializer = PostSerializer(posts, many=True)
     
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def like_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    
+    # Create a notification if the like was created
+    if created:
+        Notification.objects.create(
+            recipient=post.author,  # Notify the post's author
+            actor=request.user,
+            verb='liked your post',
+            target=post  # Assuming the target is the post
+        )
+        return Response({'message': 'Post liked.'}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def unlike_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    try:
+        like = Like.objects.get(user=request.user, post=post)
+        like.delete()
+        return Response({'message': 'Post unliked.'}, status=status.HTTP_204_NO_CONTENT)
+    except Like.DoesNotExist:
+        return Response({'message': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
 # Create your views here.

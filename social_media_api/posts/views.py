@@ -13,6 +13,9 @@ from .models import Post
 from rest_framework.decorators import api_view, permission_classes
 from accounts.models import CustomUser  # Ensure you import your CustomUser model
 from notifications.models import Notification  # Adjust if necessary
+from django.shortcuts import get_object_or_404
+from rest_framework import status
+from .models import Post, Like
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()

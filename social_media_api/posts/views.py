@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view
 from .models import Post
+from rest_framework.decorators import api_view, permission_classes
+from accounts.models import CustomUser  # Ensure you import your CustomUser model
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -38,4 +40,21 @@ def user_feed(request):
     posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
     serialized_posts = PostSerializer(posts, many=True)
     return Response(serialized_posts.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def feed_view(request):
+    # Get the current user
+    current_user = request.user
+    # Get the users that the current user follows
+    following_users = current_user.following.all()
+    
+    # Retrieve posts from followed users, ordered by creation date
+    posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+    
+    # Serialize the posts (assuming you have a PostSerializer)
+    serializer = PostSerializer(posts, many=True)
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Create your views here.

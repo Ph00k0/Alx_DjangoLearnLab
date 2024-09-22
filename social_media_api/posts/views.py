@@ -16,6 +16,8 @@ from notifications.models import Notification  # Adjust if necessary
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from .models import Post, Like
+from rest_framework import generics
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -64,7 +66,7 @@ def feed_view(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     like, created = Like.objects.get_or_create(user=request.user, post=post)
     
     # Create a notification if the like was created
@@ -82,7 +84,7 @@ def like_post(request, pk):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     try:
         like = Like.objects.get(user=request.user, post=post)
         like.delete()

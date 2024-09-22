@@ -11,6 +11,8 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import CustomUser
+from rest_framework.permissions import IsAuthenticated
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -52,6 +54,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
     
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure only authenticated users can follow/unfollow
 def follow_user(request, user_id):
     user_to_follow = get_object_or_404(CustomUser, id=user_id)
     if request.user == user_to_follow:
@@ -61,6 +64,7 @@ def follow_user(request, user_id):
     return Response({"detail": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure only authenticated users can follow/unfollow
 def unfollow_user(request, user_id):
     user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
     if request.user == user_to_unfollow:
@@ -68,6 +72,13 @@ def unfollow_user(request, user_id):
 
     request.user.following.remove(user_to_unfollow)
     return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def list_users(request):
+    users = CustomUser.objects.all()
+    serialized_users = UserSerializer(users, many=True)
+    return Response(serialized_users.data)
 
 
 # Create your views here.

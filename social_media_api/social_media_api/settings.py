@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',   # Added Django REST Framework
     'rest_framework.authtoken',  # Added Token Authentication
     'accounts',         # Added Accounts App
+    'posts',  # Add the posts app here
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +134,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 AUTH_USER_MODEL = 'accounts.CustomUser'

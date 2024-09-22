@@ -23,7 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": "Passwords must match."})
 
         # Create the user using the User model's create_user method
-        user = User.objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)  # MISSING PART 
         user.set_password(password)  # Set the password properly
         user.save()
 
